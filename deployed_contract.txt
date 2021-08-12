@@ -1,0 +1,75 @@
+truffle migrate --reset --network godwoken
+{
+  rollupTypeHash: '0x4cc2e6526204ae6a2e8fcf12f7ad472f41a1606d5b9624beebd215d780809f6a',
+  ethAccountLockCodeHash: '0xdeec13a7b8e100579541384ccaf4b5223733e4a5483c3aec95ddc4c1d5ea5b22',
+  web3Url: 'https://godwoken-testnet-web3-rpc.ckbapp.dev'
+}
+
+Compiling your contracts...
+===========================
+> Compiling ./contracts/TasksContract.sol
+> Artifacts written to /home/x777/react/gitcoin-task-7/blockchain-ethereum-contract/build/contracts
+> Compiled successfully using:
+   - solc: 0.5.16+commit.9c3226ce.Emscripten.clang
+
+
+
+Starting migrations...
+======================
+> Network name:    'godwoken'
+> Network id:      71393
+> Block gas limit: 12500000 (0xbebc20)
+
+
+1_initial_migration.js
+======================
+
+   Replacing 'Migrations'
+   ----------------------
+   > transaction hash:    0x30c9df14c9cc246fc2b2f2435c21de140371a6ba87c7e3315c11e24883b64748
+   > Blocks: 0            Seconds: 69
+   > contract address:    0xcf0aa2Afe78AbA0910C2a4bEBa8e78b8c9CFa9c8
+   > block number:        19172
+   > block timestamp:     1628789934
+   > account:             0x37C2b41ea4a10308d043F790493A3CdEc28585ae
+   > balance:             0.000000199997700086
+   > gas used:            21019 (0x521b)
+   > gas price:           0 gwei
+   > value sent:          0 ETH
+   > total cost:          0 ETH
+
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:                   0 ETH
+
+
+2_deploy_tasks.js
+=================
+
+   Replacing 'TasksContract'
+   -------------------------
+   > transaction hash:    0x1d87cd180ee4ad7f5f2e3e9554a60639c53a6fff546392d40eff059a8a5525cb
+   > Blocks: 0            Seconds: 68
+   > contract address:    0x57a4d44de477A569766Ab934Fff38281d034f3EF
+   > block number:        19174
+   > block timestamp:     1628790054
+   > account:             0x37C2b41ea4a10308d043F790493A3CdEc28585ae
+   > balance:             0.000000199997700086
+   > gas used:            151262 (0x24ede)
+   > gas price:           0 gwei
+   > value sent:          0 ETH
+   > total cost:          0 ETH
+
+
+   > Saving migration to chain.
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:                   0 ETH
+
+
+Summary
+=======
+> Total deployments:   2
+> Final cost:          0 ETH
