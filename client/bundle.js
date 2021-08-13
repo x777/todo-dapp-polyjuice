@@ -7,6 +7,7 @@ App = {
 		await App.loadWeb3();
 		await App.loadAccount();
 		await App.loadContract();
+		await App.loadSudtContract();
 		await App.renderBalance();
 		await App.renderTasks();
 	},
@@ -42,10 +43,25 @@ App = {
 		try {
 			const res = await fetch("TasksContract.json");
 			const tasksContractJSON = await res.json();
-			// Use CONFIG for contract address
+			// Use CONFIG for contracts address
 			App.tasksContract = new web3.eth.Contract(tasksContractJSON.abi, CONFIG.CONTRACT_ADDRESS);
+			
 
-			console.log('Contract loaded:', App.tasksContract)
+			console.log('Task contract loaded:', App.tasksContract)
+		} catch (error) {
+			alert('Contract not found. Please deploy before continue')
+			console.error('Cannot find deployed contract:', error);
+		}
+	},
+
+	loadSudtContract: async () => {
+		try {
+			const res = await fetch("ERC20.json");
+			const sudtContract = await res.json();
+			// Use CONFIG for contracts address
+			App.sudtContract = new web3.eth.Contract(sudtContract.abi, CONFIG.SUDT_ERC20_PROXY_ADDRESS);
+
+			console.log('SUDT contract loaded:', App.sudtContract)
 		} catch (error) {
 			alert('Contract not found. Please deploy before continue')
 			console.error('Cannot find deployed contract:', error);
@@ -56,9 +72,40 @@ App = {
 	renderBalance: async () => {
 		const addressTranslator = new AddressTranslator();
 		const polyjuiceAddress = addressTranslator.ethAddressToGodwokenShortAddress(App.account);
+		const ckETHAddress = await addressTranslator.getLayer2DepositAddress(web3, App.account);
+		
+		const urlDeposit = "https://force-bridge-test.ckbapp.dev/bridge/Ethereum/Nervos?recipient=" + ckETHAddress.addressString
+		
+		const ckbShn = BigInt(await web3.eth.getBalance(App.account));
+		const ckbBalance = parseInt(BigInt(ckbShn / 10n ** 8n));
+
+		const ckEth = BigInt(await App.sudtContract.methods.balanceOf(polyjuiceAddress).call({
+			from: App.account
+		}));
+		
+		ckEthBalance = parseInt(BigInt(ckEth / 10n**8n));
+		
 		document.getElementById("account").innerText = App.account;
 		document.getElementById("polyjuice-account").innerText = polyjuiceAddress;
+		document.getElementById("ck-eth").innerText = ckETHAddress.addressString;
+		// document.getElementById("ckb-balance").innerText = ckbBalance + " $CKB";
+		document.getElementById("do-deposit").href = urlDeposit
+		document.getElementById("ckb-balance").innerText = ckbBalance + " $CKB";
+		document.getElementById("cketh-balance").innerText = ckEthBalance + " $ckETH";
+		
+		//   Copy address
+		document.querySelector("#do-deposit").addEventListener("click", function copy() {
+			var copyText = document.querySelector("#ck-eth");
+			var elementText = copyText.textContent;
+			navigator.clipboard.writeText(elementText);
+		});
+
+		// console.log(await App.sudtContract.methods.balanceOf(polyjuiceAddress).call({
+		// 	from: App.account
+		// }));
 	},
+
+	
 
   // render tasks
 	renderTasks: async () => {
@@ -141,7 +188,13 @@ const CONFIG = {
     DEFAULT_SEND_OPTIONS: {
         gas: 6000000
     },
-    CONTRACT_ADDRESS: '0x57a4d44de477A569766Ab934Fff38281d034f3EF'
+    CONTRACT_ADDRESS: '0x57a4d44de477A569766Ab934Fff38281d034f3EF',
+    SUDT_ERC20_PROXY_ADDRESS: '0xD5A6a78E967cd70C6791d5289B3E4b1D5D55eC27'
+    // SUDT_ID:152,
+    // SUDT_NAME:'MyToken',
+    // SUDT_SYMBOL:'MTK',
+    // SUDT_TOTAL_SUPPLY: 9999999999
+
 };
 
 module.exports = {CONFIG}
