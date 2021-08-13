@@ -79,7 +79,7 @@ App = {
 			const taskId = parseInt(task[0]);
 			const taskTitle = task[1];
 			const taskDescription = task[2];
-			// const taskDone = task[3];
+			const taskDone = task[3];
 			const taskCreatedAt = task[4];
 
 			// Creating a task Card
